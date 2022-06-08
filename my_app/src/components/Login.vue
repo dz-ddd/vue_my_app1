@@ -23,6 +23,7 @@
         <!-- 密码 -->
         <el-form-item prop="password" label="密码">
           <el-input
+            show-password
             type="password"
             v-model="loginForm.password"
             prefix-icon="iconfont icon-3702mima"
