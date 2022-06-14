@@ -109,10 +109,11 @@
                 :enterable="false"
                 class="item"
                 effect="dark"
-                content="设置权限"
+                content="分配角色"
                 placement="top"
               >
                 <el-button
+                  @click="setUserRole(scope.row)"
                   type="warning"
                   icon="el-icon-setting"
                   circle
@@ -206,6 +207,34 @@
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
       </span>
     </el-dialog>
+
+
+<!-- 6.3 分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setUserRoleDialog"
+      width="50%"
+      @close="setRoleDialogClosed"
+      >
+      <div>
+        <p>当前用户：{{userInfo.username}}</p>
+        <p>当前角色：{{userInfo.role_name}}</p>
+        <p>分配新角色：
+           <el-select v-model="selectRoleId" placeholder="请选择">
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName "
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setUserRoleDialog = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,8 +266,6 @@ export default {
     return {
       // 修改对象
       editForm: {},
-      // 修改用户信息对话框是否展示
-      editDilogVisible: false,
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
@@ -249,6 +276,16 @@ export default {
       total: 0, //总的用户数据条数
       // 控制添加对话框是否弹出
       dialogVisible: false,
+      // 控制分配角色对话框是否弹出
+      setUserRoleDialog: false,
+       // 修改用户信息对话框是否展示
+      editDilogVisible: false,
+       // 需要分配角色用户信息
+      userInfo:{},
+      // 已选择的角色id值
+      selectRoleId:"",
+      // 角色列表
+      roleList:[],
       // 添加用户的表单数据
       addForm: {
         username: '',
@@ -302,7 +339,34 @@ export default {
       },
     }
   },
+
+  
   methods: {
+    // 分配角色对话框关闭
+    setRoleDialogClosed(){
+      this.selectRoleId = ""
+      this.userInfo = ''
+    },
+    // 确定分配角色
+    async saveRoleInfo(){
+      if(!this.selectRoleId) return this.$message.error("请选择用户角色")
+      const {data:res} = await this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRoleId })
+      if(res.meta.status !== 200) return this.$message.error("分配角色失败")
+      this.$message.success('分配角色成功')
+      this.getUserList()
+      this.setUserRoleDialog = false
+    },
+    // 分配角色对话框弹出
+    async setUserRole(userInfo){
+      // console.log(userInfo);
+      this.userInfo = userInfo
+      // 获取全部角色信息
+      const {data:res} = await this.$http.get('roles')
+      if(res.meta.status !== 200) return this.$message.error("获取角色列表失败")
+      console.log(res.data);
+      this.roleList = res.data 
+      this.setUserRoleDialog = true
+    },
 
     // 删除用户
     async removeUserById(id){
