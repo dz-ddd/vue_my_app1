@@ -340,7 +340,6 @@ export default {
     }
   },
 
-  
   methods: {
     // 分配角色对话框关闭
     setRoleDialogClosed(){

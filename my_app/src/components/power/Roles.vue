@@ -265,7 +265,7 @@ export default {
 
     // 工具id删除角色权限
     async removeRightById(role,rightId){
-      console.log(role);
+      // console.log(role);
          // 询问是否删除
         const confirmResout = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
           confirmButtonText: '确定',
