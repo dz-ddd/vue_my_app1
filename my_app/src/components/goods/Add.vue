@@ -233,7 +233,7 @@ export default {
       const {data:res} = await this.$http.post('goods',form)
       if(res.meta.status !== 201) return this.$message.error('添加商品失败')
       this.$message.success('商品添加成功')
-      this.$router.push('/goods') //页面跳转
+      this.$router.push('/goods')
 
     },
 
