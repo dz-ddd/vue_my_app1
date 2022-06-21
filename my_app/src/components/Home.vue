@@ -27,7 +27,7 @@
           >
 
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id+''" 
+          <el-submenu :index="item.id+''"
             :key="item.id"
             v-for="item in menulist"
           >
@@ -37,7 +37,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item 
+            <el-menu-item
             :index="'/'+i.path"
             :key="i.id"
             v-for="i in item.children"
@@ -63,60 +63,60 @@
 <script>
 export default {
 
-  data(){
+  data() {
     return {
       // 左侧菜单的数据
-      menulist:[],
-      iconObj:{
-        '125':'iconfont icon-user',
-        '103':'iconfont icon-tijikongjian',
-        '101':'iconfont icon-shangpin',
-        '102':'iconfont icon-danju',
-        '145':'iconfont icon-baobiao',
+      menulist: [],
+      iconObj: {
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
       },
       // 二级菜单的路径
-      itemPath:'',
+      itemPath: '',
       // 是否折叠
-      toggle:"true",
-      asideWidth:200
+      toggle: 'true',
+      asideWidth: 200
     }
   },
   // 加载所有菜单
-  created(){
+  created() {
     this.getMenuList()
     this.itemPath = window.sessionStorage.getItem('itemPath')
   },
   methods: {
     // 选中菜单高亮
-    togglePoint(path){
+    togglePoint(path) {
       // 保持激活状态
-        window.sessionStorage.setItem('itemPath',path)
-        this.itemPath = path
+      window.sessionStorage.setItem('itemPath', path)
+      this.itemPath = path
     },
     // 点击折叠所有菜单
-    toggleCollapse(){
+    toggleCollapse() {
       this.toggle = !this.toggle
-      if(this.asideWidth === 64) {
+      if (this.asideWidth === 64) {
         this.asideWidth = 200
-      }else{
+      } else {
         this.asideWidth = 64
       }
     },
 
-    //退出按钮 
+    // 退出按钮
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
 
     // 获取所有菜单
-    async getMenuList(){
-      const {data:res} = await this.$http.get('menus')
+    async getMenuList() {
+      const { data: res } = await this.$http.get('menus')
       // 失败
-      if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.menulist = res.data
     }
-  },
+  }
 }
 </script>
 

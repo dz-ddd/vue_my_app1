@@ -26,25 +26,25 @@
 </template>
 <script>
 export default {
-   data(){
-       return {
-        //    权限列表
-           rightsList:[],
-       }
-   },
-   created(){
+  data() {
+    return {
+      //    权限列表
+      rightsList: []
+    }
+  },
+  created() {
     //    页面创建时加载数据
-       this.getRightList();
-   },
-   methods: {
-       async getRightList(){
-         const {data:res} = await this.$http.get('rights/list')
-         if(res.meta.status !== 200) return this.$message.error("权限列表加载失败")
-        //  this.$message.success("权限列表获取成功")
-        this.rightsList = res.data
-        console.log(this.rightsList);
-        }
-   },
+    this.getRightList()
+  },
+  methods: {
+    async getRightList() {
+      const { data: res } = await this.$http.get('rights/list')
+      if (res.meta.status !== 200) return this.$message.error('权限列表加载失败')
+      //  this.$message.success("权限列表获取成功")
+      this.rightsList = res.data
+      console.log(this.rightsList)
+    }
+  }
 
 }
 </script>

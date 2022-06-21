@@ -121,52 +121,52 @@
 </template>
 
 <script>
-import _ from 'lodash';
+import _ from 'lodash'
 export default {
   data() {
     return {
 
       // 图片预览对话框展开
-      previewVisible:false,
+      previewVisible: false,
       // 图片预览url
-      previewPath:'',
+      previewPath: '',
       // 图片上传组件的请求头对象
-      headerObj:{
+      headerObj: {
         Authorization:
         window.sessionStorage.getItem('token')
       },
       // 上传图片的url地址
-      uploadUrl:'http://127.0.0.1:8888/api/private/v1/upload',
+      uploadUrl: 'http://127.0.0.1:8888/api/private/v1/upload',
       // 商品静态属性参数渲染列表
-      onlyTableData:[],
+      onlyTableData: [],
       // 商品动态参数渲染数据列表
-      manyTableData:[],
+      manyTableData: [],
       // 级联选择器props属性对象
       cateProps: {
         expandTrigger: 'hover',
         label: 'cat_name',
         value: 'cat_id',
-        children: 'children',
+        children: 'children'
       },
       // 商品分类列表数据
       cateList: [],
       // 表单数据校验规则对象
       addFromRules: {
         goods_name: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' },
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
         ],
         goods_price: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' },
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
         ],
         goods_weight: [
-          { required: true, message: '请输入商品重量', trigger: 'blur' },
+          { required: true, message: '请输入商品重量', trigger: 'blur' }
         ],
         goods_number: [
-          { required: true, message: '请输入商品数量', trigger: 'blur' },
+          { required: true, message: '请输入商品数量', trigger: 'blur' }
         ],
         goods_cat: [
-          { required: true, message: '请选择商品分类', trigger: 'blur' },
-        ],
+          { required: true, message: '请选择商品分类', trigger: 'blur' }
+        ]
       },
       // 添加商品表单数据对象
       addForm: {
@@ -177,22 +177,22 @@ export default {
         // 商品所属分类数组 级联选择器model属性值
         goods_cat: [],
         // 图片临时路径
-        pics:[],
+        pics: [],
         // 商品详情描述
-        goods_introduce:'',
-        attrs:[],
+        goods_introduce: '',
+        attrs: []
 
       },
       // 标签也样式
       // tabPosition:'left',
       // 添加商品步骤条索引
-      activeIndex: '0',
+      activeIndex: '0'
     }
   },
 
-  computed:{
-    cateId(){
-      if(this.addForm.goods_cat.length === 3){
+  computed: {
+    cateId() {
+      if (this.addForm.goods_cat.length === 3) {
         return this.addForm.goods_cat[2]
       }
       return null
@@ -202,9 +202,9 @@ export default {
     this.getCateList()
   },
   methods: {
-    async add(){
+    async add() {
       this.$refs.addFromRef.validate(valid => {
-        if(!valid) return this.$message.error('请写入必要表单项')
+        if (!valid) return this.$message.error('请写入必要表单项')
       })
       // 执行添加操作
       const form = _.cloneDeep(this.addForm)
@@ -212,86 +212,81 @@ export default {
       // 处理动态参数和静态属性
       this.manyTableData.forEach(item => {
         const newInfo = {
-          attr_id:item.attr_id,
+          attr_id: item.attr_id,
           attr_val: item.attr_vals.join(' ')
         }
         this.addForm.attrs.push(newInfo)
       })
       this.onlyTableData.forEach(item => {
         const newInfo = {
-          attr_id:item.attr_id,
+          attr_id: item.attr_id,
           attr_val: item.attr_vals
         }
         this.addForm.attrs.push(newInfo)
-
       })
       form.attrs = this.addForm.attrs
       // 最终提交的是克隆的form数据 因为绑定的addForm中的attrs数据类型不能改变
-      console.log('添加成功',form);
+      console.log('添加成功', form)
 
       // 发起网络请求
-      const {data:res} = await this.$http.post('goods',form)
-      if(res.meta.status !== 201) return this.$message.error('添加商品失败')
+      const { data: res } = await this.$http.post('goods', form)
+      if (res.meta.status !== 201) return this.$message.error('添加商品失败')
       this.$message.success('商品添加成功')
       this.$router.push('/goods')
-
     },
 
     // 监听图片上传成功事件
-    handleSuccess(response){
-      console.log(response);
+    handleSuccess(response) {
+      console.log(response)
       // 拼接得到图片信息
       const picsInfo = {
-        pic:response.data.tmp_path
+        pic: response.data.tmp_path
       }
       // 将图片信息push发送到pics数组中
       this.addForm.pics.push(picsInfo)
-      console.log(this.addForm.pics);
-
+      console.log(this.addForm.pics)
     },
     // 处理图片删除事件
-    handleRemove(file){
+    handleRemove(file) {
       // console.log(file);
       // 获取临时路径
       // console.log(this.addForm.pics);
 
       const filePath = file.response.data.tmp_path
       // 找到此路径在数组中的索引位置
-      const i =  this.addForm.pics.findIndex(x => 
-        {x.pic === filePath})
+      const i = this.addForm.pics.findIndex(x => { return x.pic === filePath })
       // 删除此索引位置的对象
-      this.addForm.pics.splice(i,1)
-      console.log(this.addForm);
-
+      this.addForm.pics.splice(i, 1)
+      console.log(this.addForm)
     },
     // 处理图片预览事件
-    handlePreview(file){
-      console.log(file);
+    handlePreview(file) {
+      console.log(file)
       this.previewPath = file.response.data.url
       this.previewVisible = true
-      
     },
     // 标签页点击商品参数/商品属性事件监听
     async tabClicked() {
       console.log(this.activeIndex)
       // 证明访问的是动态参数
-      if(this.activeIndex === '1'){
-        console.log('动态参数面板' );
-        const {data: res} = await this.$http.get(`categories/${this.cateId}/attributes`,
-                                                  {params:{sel:'many'}})
-        if(res.meta.status !== 200) return this.$message.error('获取动态参数失败')
-        console.log(res.data);
+      if (this.activeIndex === '1') {
+        console.log('动态参数面板')
+        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`,
+          { params: { sel: 'many' } })
+        if (res.meta.status !== 200) return this.$message.error('获取动态参数失败')
+        console.log(res.data)
         res.data.forEach(item => {
-          item.attr_vals = item.attr_vals.length === 0 ? []
+          item.attr_vals = item.attr_vals.length === 0
+            ? []
             : item.attr_vals.split(' ')
         })
         this.manyTableData = res.data
-      }else if(this.activeIndex === '2'){
-        console.log('静态属性面板' );
-        const {data: res} = await this.$http.get(`categories/${this.cateId}/attributes`,
-                                                  {params:{sel:'only'}})
-        if(res.meta.status !== 200) return this.$message.error('获取动态参数失败')
-        console.log(res.data);
+      } else if (this.activeIndex === '2') {
+        console.log('静态属性面板')
+        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`,
+          { params: { sel: 'only' } })
+        if (res.meta.status !== 200) return this.$message.error('获取动态参数失败')
+        console.log(res.data)
         this.onlyTableData = res.data
       }
     },
@@ -314,12 +309,11 @@ export default {
     // 获取商品分类数据
     async getCateList() {
       const { data: res } = await this.$http.get('categories')
-      if (res.meta.status !== 200)
-        return this.$message.error('获取商品分类失败')
+      if (res.meta.status !== 200) { return this.$message.error('获取商品分类失败') }
       this.cateList = res.data
       // console.log(this.cateList);
-    },
-  },
+    }
+  }
 }
 </script>
 

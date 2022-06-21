@@ -31,27 +31,27 @@ const router = new VueRouter({
     {
       path: '/home',
       component: Home,
-      redirect:'/welcome',
+      redirect: '/welcome',
       children: [
         // 默认的首页内容Welcome
-        {path: '/welcome',component: Welcome },
-        {path:'/users',component:Users},
-        {path:'/rights',component:Rights},
-        {path:'/roles',component:Roles},
-        {path:'/categories',component:Cate},
-        {path:'/params',component:GoodsParams},
-        {path:'/goods',component:GoodsList},
-        {path:'/goods/add',component:Add},
-        {path:'/orders',component:Order},
-        {path:'/reports',component:Report}
-        
-      ]
-    },
+        { path: '/welcome', component: Welcome },
+        { path: '/users', component: Users },
+        { path: '/rights', component: Rights },
+        { path: '/roles', component: Roles },
+        { path: '/categories', component: Cate },
+        { path: '/params', component: GoodsParams },
+        { path: '/goods', component: GoodsList },
+        { path: '/goods/add', component: Add },
+        { path: '/orders', component: Order },
+        { path: '/reports', component: Report }
 
-  ],
+      ]
+    }
+
+  ]
 })
 
-//路由导航守卫
+// 路由导航守卫
 router.beforeEach((to, from, next) => {
   // to 要访问的路径 from 从哪个路径跳转过来  next 是一个函数 表示放行的条件
   // next('/login') 强制跳转
@@ -62,4 +62,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-export default router 
+export default router

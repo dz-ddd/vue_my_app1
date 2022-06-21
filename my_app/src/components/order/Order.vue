@@ -10,7 +10,7 @@
         <el-card class="box-card">
             <!-- 搜索栏 -->
             <el-row>
-                <el-col :span="8">  
+                <el-col :span="8">
                     <el-input placeholder="请输入内容" >
                         <el-button slot="append" icon="el-icon-search">
                         </el-button>
@@ -45,7 +45,7 @@
                             icon="el-icon-edit"
 
                             @click="showEditDialog(scope)"
-                            ></el-button>  
+                            ></el-button>
                         <el-button
                             type="success"
                             size="mini"
@@ -96,98 +96,97 @@
             width="50%"
             >
             <span>这是一段信息</span>
-           
+
         </el-dialog>
 
     </div>
 </template>
 
 <script>
-import cityData from "./citydata"
+import cityData from './citydata'
 export default {
-    data() {
-        return {
-            // 物流信息保存
-            progressInfo:[],
-            // 物流对话框展示
-            progressVisible:false,
-            cityData,
-            // 数据校验对象
-            addressRules:{
-                address1:
+  data() {
+    return {
+      // 物流信息保存
+      progressInfo: [],
+      // 物流对话框展示
+      progressVisible: false,
+      cityData,
+      // 数据校验对象
+      addressRules: {
+        address1:
                     { required: true, message: '请选择省市区/县', trigger: 'blur' },
-                address2:
-                    { required: true, message: '请输入详细地址', trigger: 'blur' },
+        address2:
+                    { required: true, message: '请输入详细地址', trigger: 'blur' }
 
-            },
-            // 对话框展示内容数据列表
-            addressForm:{
-                address1:[],
-                address2:''
-            },
-            // 编辑对话框打开
-            editdialogVisible:false,
-            // 订单总数据条数
-            total:0,
+      },
+      // 对话框展示内容数据列表
+      addressForm: {
+        address1: [],
+        address2: ''
+      },
+      // 编辑对话框打开
+      editdialogVisible: false,
+      // 订单总数据条数
+      total: 0,
 
-            // 获取的订单数据列表
-            orderlist:[],
+      // 获取的订单数据列表
+      orderlist: [],
 
-            queryInfo:{
-                query:'',
-                pagenum:1,
-                pagesize:10
-            }
-        }
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      }
+    }
+  },
+
+  created() {
+    this.getOrderList()
+  },
+
+  methods: {
+
+    // 物流进度展示
+    // 快递信息接口失效无法查询
+    async showProgressBox() {
+      const { data: res } = await this.$http.get('kuaidi/JD0075877797746')
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error('获取物流信息失败')
+      this.progressInfo = res.data
+      console.log(this.progressInfo)
+      this.progressVisible = true
+    },
+    // 对话框关闭事件
+    editDialogClosed() {
+      this.$refs.addressFormRef.resetFields()
     },
 
-    created(){
-        this.getOrderList()
+    // 修改对话框展示
+    showEditDialog() {
+      this.editdialogVisible = true
     },
-
-    methods:{
-
-        // 物流进度展示
-        // 快递信息接口失效无法查询
-        async showProgressBox(){
-            const {data:res} = await this.$http.get('kuaidi/JD0075877797746')
-            console.log(res);
-            if(res.meta.status !==200 )return this.$message.error('获取物流信息失败')
-            this.progressInfo = res.data
-            console.log(this.progressInfo);
-            this.progressVisible = true
-        },
-        // 对话框关闭事件
-        editDialogClosed(){
-            this.$refs.addressFormRef.resetFields()
-        },
-
-        // 修改对话框展示
-        showEditDialog(){
-            this.editdialogVisible = true
-        },
-        // 
-        handleCurrentChange(nwePage){
-            this.queryInfo.pagenum = nwePage
-            this.getOrderList()
-        },
-        // 分页改变事件监听
-        handleSizeChange(newSize){
-            this.queryInfo.pagesize = newSize
-            this.getOrderList()
-        },
-        // 获取订单数据
-        async getOrderList(){
-           const {data:res} =
-           await this.$http.get('orders',{params:this.queryInfo})
-           if(res.meta.status !== 200) return this.$message.error('获取订单列表失败')
-           console.log(res);
-        //    获取列表数据
-           this.orderlist = res.data.goods
-           this.total = res.data.total
-        },
+    //
+    handleCurrentChange(nwePage) {
+      this.queryInfo.pagenum = nwePage
+      this.getOrderList()
     },
-
+    // 分页改变事件监听
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getOrderList()
+    },
+    // 获取订单数据
+    async getOrderList() {
+      const { data: res } =
+           await this.$http.get('orders', { params: this.queryInfo })
+      if (res.meta.status !== 200) return this.$message.error('获取订单列表失败')
+      console.log(res)
+      //    获取列表数据
+      this.orderlist = res.data.goods
+      this.total = res.data.total
+    }
+  }
 
 }
 </script>

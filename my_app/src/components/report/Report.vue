@@ -16,13 +16,13 @@
 
 <script>
 // 1.引入eacharts
-import * as echarts from 'echarts';
-import _ from 'lodash';
+import * as echarts from 'echarts'
+import _ from 'lodash'
 
 export default {
-    data(){
-        return {
-            options: {
+  data() {
+    return {
+      options: {
         title: {
           text: '用户来源'
         },
@@ -52,21 +52,21 @@ export default {
           }
         ]
       }
-        }
-    },
-    created(){},
-    async mounted(){
+    }
+  },
+  created() {},
+  async mounted() {
     // 基于准备好的dom，初始化echarts实例
-      var myChart = echarts.init(document.getElementById('main'));
+    const myChart = echarts.init(document.getElementById('main'))
 
-      const {data:res} = await this.$http.get('reports/type/1')
-      if(res.meta.status !== 200 ) return this.$message.error('获取折线图数据失败')
+    const { data: res } = await this.$http.get('reports/type/1')
+    if (res.meta.status !== 200) return this.$message.error('获取折线图数据失败')
     // 指定图表的配置项和数据
-    const reult=  _.merge(res.data,this.options)
-      // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(reult);
-    },
-    methods:{}
+    const reult = _.merge(res.data, this.options)
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(reult)
+  },
+  methods: {}
 }
 </script>
 

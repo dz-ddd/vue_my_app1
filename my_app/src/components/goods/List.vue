@@ -42,7 +42,7 @@
                                 type="primary"
                                 icon="el-icon-edit"
                                >
-                                
+
                         </el-button>
                         <el-button
                                 size="mini"
@@ -50,11 +50,10 @@
                                 icon="el-icon-delete"
                                 @click="removeById(scope.row)"
                                >
-                                
+
                         </el-button>
                     </template>
                 </el-table-column>
-
 
             </el-table>
 
@@ -70,7 +69,7 @@
                 :total="total">
             </el-pagination>
         </el-card>
-        
+
         <!-- 添加商品对话框  -->
         <!-- <el-dialog
             title="添加商品"
@@ -90,75 +89,75 @@
 export default {
   data() {
     return {
-        // // 添加商品对话框展示
-        // addDialogVisible:false,
-        // 数据总数
-        total:0,
-        // 商品数据列表
-        goodslist:[],
-        // 查询所需参数对象
-        queryInfo:{
-            query:"",
-            pagenum:1,
-            pagesize:10
-        }
+      // // 添加商品对话框展示
+      // addDialogVisible:false,
+      // 数据总数
+      total: 0,
+      // 商品数据列表
+      goodslist: [],
+      // 查询所需参数对象
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      }
     }
   },
 
   created() {
-      this.getGoodsList()
+    this.getGoodsList()
   },
 
   methods: {
     // 展示添加商品对话框监听
-    goAddGoods(){
-        this.$router.push('/goods/add')
+    goAddGoods() {
+      this.$router.push('/goods/add')
     },
     // 删除商品事件监听
-    async removeById(row){
-         // 询问是否删除
-        const confirmResout = await this.$confirm(
-            '此操作将永久删除该商品, 是否继续?',
-            '提示',
-            {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-            }
-        ).catch((err) => err)
+    async removeById(row) {
+      // 询问是否删除
+      const confirmResout = await this.$confirm(
+        '此操作将永久删除该商品, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch((err) => err)
       // 1.用户点击确定删除则confirmResout返回confirm
       // 2.用户点击取消删除则confirmResout返回cancel
-        console.log(confirmResout)
-        if (confirmResout !== 'confirm') return this.$message.info('已经取消删除')
-        console.log('确认删除')
-        const { data: res } = await this.$http.delete('goods/' + row.goods_id)
-        if (res.meta.status !== 200) return this.$message.error('删除商品失败')
-        this.$message.success('删除商品成功')
-        // 重新加载数据
-        this.getGoodsList()
+      console.log(confirmResout)
+      if (confirmResout !== 'confirm') return this.$message.info('已经取消删除')
+      console.log('确认删除')
+      const { data: res } = await this.$http.delete('goods/' + row.goods_id)
+      if (res.meta.status !== 200) return this.$message.error('删除商品失败')
+      this.$message.success('删除商品成功')
+      // 重新加载数据
+      this.getGoodsList()
     },
     // 分页改变监听事件
-    handleSizeChange(newSize){
-        this.queryInfo.pagesize = newSize
-        this.getGoodsList()
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getGoodsList()
     },
     // 分页页码监听
-    handleCurrentChange(newNum){
-         this.queryInfo.pagenum = newNum
-        this.getGoodsList()
+    handleCurrentChange(newNum) {
+      this.queryInfo.pagenum = newNum
+      this.getGoodsList()
     },
 
     // 根据分页获取商品数据
-    async getGoodsList(){
-        const {data:res} = await this.$http.get('goods',{params:this.queryInfo})
-        if(res.meta.status !== 200) return this.$message.error('获取商品列表失败')
-        this.$message.success('获取商品列表成功')
-        this.goodslist = res.data.goods
-        this.total = res.data.total
-        console.log(res.data);
-    },
+    async getGoodsList() {
+      const { data: res } = await this.$http.get('goods', { params: this.queryInfo })
+      if (res.meta.status !== 200) return this.$message.error('获取商品列表失败')
+      this.$message.success('获取商品列表成功')
+      this.goodslist = res.data.goods
+      this.total = res.data.total
+      console.log(res.data)
+    }
 
-  },
+  }
 }
 </script>
 

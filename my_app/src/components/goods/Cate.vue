@@ -72,7 +72,7 @@
         :total="total"
       >
       </el-pagination>
-      
+
     </el-card>
 
     <!-- 添加按钮对话框 -->
@@ -153,7 +153,7 @@ export default {
         cat_pid: 0,
         cat_id: 0,
         // 分类的等级
-        cat_level: 0,
+        cat_level: 0
       },
       // 编辑对话框弹出
       editDialogVisible: false,
@@ -164,21 +164,21 @@ export default {
         expandTrigger: 'hover',
         label: 'cat_name',
         value: 'cat_id',
-        children: 'children',
+        children: 'children'
       },
       // 父级分类对象列表
       ParrentCateList: [],
       // 编辑分类的表单规则对象
       editFormRules: {
         cat_name: [
-          { required: true, message: '请输入分类名称', trigger: 'blur' },
-        ],
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ]
       },
       // 添加分类的表单规则对象
       addCateFormRules: {
         cat_name: [
-          { required: true, message: '请输入分类名称', trigger: 'blur' },
-        ],
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ]
       },
       // 添加分类表单对象
       addCateForm: {
@@ -187,7 +187,7 @@ export default {
         // 父级id
         cat_pid: 0,
         // 分类的等级
-        cat_level: 0,
+        cat_level: 0
       },
       // 添加对话框开启条件
       addDialogVisible: false,
@@ -196,25 +196,25 @@ export default {
       columns: [
         {
           label: '分类名称',
-          prop: 'cat_name',
+          prop: 'cat_name'
         },
         {
           label: '是否有效',
           // 定义类型
           type: 'template',
           // 当前作用域插槽名称
-          template: 'isOk',
+          template: 'isOk'
         },
         {
           label: '排序',
           type: 'template',
-          template: 'order',
+          template: 'order'
         },
         {
           label: '操作',
           type: 'template',
-          template: 'set',
-        },
+          template: 'set'
+        }
       ],
       // 商品分类列表 默认为空
       catelist: [],
@@ -222,10 +222,10 @@ export default {
       queryInfo: {
         type: 3,
         pagenum: 1,
-        pagesize: 5,
+        pagesize: 5
       },
       // 数据总条数 默认0
-      total: 0,
+      total: 0
     }
   },
 
@@ -243,7 +243,7 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
       ).catch((err) => err)
       // 1.用户点击确定删除则confirmResout返回confirm
@@ -322,7 +322,6 @@ export default {
           this.selectedKeys[this.selectedKeys.length - 1]
         // 当前分类等级
         this.addCateForm.cat_level = this.selectedKeys.length
-        return
       } else {
         // 获取父级分类id
         this.addCateForm.cat_pid = 0
@@ -334,10 +333,9 @@ export default {
     async getParentCateList() {
       // console.log(this.$http.get('categories'));
       const { data: res } = await this.$http.get('categories', {
-        params: { type: 2 },
+        params: { type: 2 }
       })
-      if (res.meta.status !== 200)
-        return this.$message.error('获取父级分类失败')
+      if (res.meta.status !== 200) { return this.$message.error('获取父级分类失败') }
       this.ParrentCateList = res.data
     },
 
@@ -367,15 +365,15 @@ export default {
     async getCateList() {
       // 获取用户数据
       const { data: res } = await this.$http.get('categories', {
-        params: this.queryInfo,
+        params: this.queryInfo
       })
       if (res.meta.status !== 200) return this.$message.error('数据获取失败')
       // 存放数据到data数组中
       this.catelist = res.data.result
       // 保存数据总数
       this.total = res.data.total
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -208,7 +208,6 @@
       </span>
     </el-dialog>
 
-
 <!-- 6.3 分配角色对话框 -->
     <el-dialog
       title="分配角色"
@@ -242,7 +241,7 @@
 export default {
   data() {
     // 自定义验证邮箱规则
-    var checkEmail = (rules, value, cb) => {
+    const checkEmail = (rules, value, cb) => {
       // 邮箱正则表达式
       const regEmail = /^([a-zA-Z0-9_-])+@([[a-zA-Z0-9_-])+(\.[[a-zA-Z0-9_-])+/
       if (regEmail.test(value)) {
@@ -253,8 +252,8 @@ export default {
       }
     }
     // 自定义验证电话规则
-    var checkMobile = (rules, value, cb) => {
-      let regMobile =
+    const checkMobile = (rules, value, cb) => {
+      const regMobile =
         /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
       if (regMobile.test(value)) {
         cb()
@@ -269,29 +268,29 @@ export default {
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
-        pagenum: 1, //当前页数
-        pagesize: 2, //每页显示条数
+        pagenum: 1, // 当前页数
+        pagesize: 2 // 每页显示条数
       },
       userlist: [{}],
-      total: 0, //总的用户数据条数
+      total: 0, // 总的用户数据条数
       // 控制添加对话框是否弹出
       dialogVisible: false,
       // 控制分配角色对话框是否弹出
       setUserRoleDialog: false,
-       // 修改用户信息对话框是否展示
+      // 修改用户信息对话框是否展示
       editDilogVisible: false,
-       // 需要分配角色用户信息
-      userInfo:{},
+      // 需要分配角色用户信息
+      userInfo: {},
       // 已选择的角色id值
-      selectRoleId:"",
+      selectRoleId: '',
       // 角色列表
-      roleList:[],
+      roleList: [],
       // 添加用户的表单数据
       addForm: {
         username: '',
         password: '',
         email: '',
-        mobile: '',
+        mobile: ''
       },
       // 添加表单验证规则对象
       addFormRules: {
@@ -302,8 +301,8 @@ export default {
             min: 3,
             max: 10,
             message: '用户名的长度在3--10字符之间',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入用户密码', trigger: 'blur' },
@@ -311,90 +310,91 @@ export default {
             min: 6,
             max: 10,
             message: '用户名的长度在6--15字符之间',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         email: [
           { required: true, message: '请输入用户邮箱', trigger: 'blur' },
-          { validator: checkEmail, trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
           // {min:6 , max: 10,message:"用户名的长度在6--15字符之间" ,trigger:"blur"}
         ],
         mobile: [
           { required: true, message: '请输入用户电话', trigger: 'blur' },
-          { validator: checkMobile, trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
 
           // {min:6 , max: 10,message:"用户名的长度在6--15字符之间" ,trigger:"blur"}
-        ],
+        ]
       },
       // 修改表单验证规则对象
       editFormRules: {
         email: [
           { required: true, message: '请输入用户邮箱', trigger: 'blur' },
-          { validator: checkEmail, trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
         ],
         mobile: [
           { required: true, message: '请输入用户电话', trigger: 'blur' },
-          { validator: checkMobile, trigger: 'blur' },
-        ],
-      },
+          { validator: checkMobile, trigger: 'blur' }
+        ]
+      }
     }
   },
 
   methods: {
     // 分配角色对话框关闭
-    setRoleDialogClosed(){
-      this.selectRoleId = ""
+    setRoleDialogClosed() {
+      this.selectRoleId = ''
       this.userInfo = ''
     },
     // 确定分配角色
-    async saveRoleInfo(){
-      if(!this.selectRoleId) return this.$message.error("请选择用户角色")
-      const {data:res} = await this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRoleId })
-      if(res.meta.status !== 200) return this.$message.error("分配角色失败")
+    async saveRoleInfo() {
+      if (!this.selectRoleId) return this.$message.error('请选择用户角色')
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, { rid: this.selectRoleId })
+      if (res.meta.status !== 200) return this.$message.error('分配角色失败')
       this.$message.success('分配角色成功')
       this.getUserList()
       this.setUserRoleDialog = false
     },
     // 分配角色对话框弹出
-    async setUserRole(userInfo){
+    async setUserRole(userInfo) {
       // console.log(userInfo);
       this.userInfo = userInfo
       // 获取全部角色信息
-      const {data:res} = await this.$http.get('roles')
-      if(res.meta.status !== 200) return this.$message.error("获取角色列表失败")
-      console.log(res.data);
-      this.roleList = res.data 
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.$message.error('获取角色列表失败')
+      console.log(res.data)
+      this.roleList = res.data
       this.setUserRoleDialog = true
     },
 
     // 删除用户
-    async removeUserById(id){
+    async removeUserById(id) {
       // console.log(id);
       // 询问是否删除
-        const confirmResout = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).catch(err => err)
-        // 1.用户点击确定删除则confirmResout返回confirm
-        // 2.用户点击取消删除则confirmResout返回cancel
-        // console.log(confirmResout);
-        if(confirmResout !== 'confirm') return this.$message.info('已经取消删除')
-        console.log("确认删除");
-        const {data:res} = await this.$http.delete("users/"+ id,)
-        if(res.meta.status !== 200) return this.$message.error('删除用户失败')
-        this.$message.success('删除用户成功')
-        // 重新加载数据
-        this.getUserList()
-        
+      const confirmResout = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      // 1.用户点击确定删除则confirmResout返回confirm
+      // 2.用户点击取消删除则confirmResout返回cancel
+      // console.log(confirmResout);
+      if (confirmResout !== 'confirm') return this.$message.info('已经取消删除')
+      console.log('确认删除')
+      const { data: res } = await this.$http.delete('users/' + id)
+      if (res.meta.status !== 200) return this.$message.error('删除用户失败')
+      this.$message.success('删除用户成功')
+      // 重新加载数据
+      this.getUserList()
     },
     // 点击确定修改用户数据
-    editUserInfo(){
+    editUserInfo() {
       this.$refs.editFormRef.validate(async valid => {
-        if(!valid) return this.$message.error('修改内容错误，请重新确认')
-        const {data:res} = await this.$http.put('users/'+this.editForm.id ,{email:this.editForm.email,
-                                                  mobile:this.editForm.mobile})
-        if(res.meta.status !== 200) return this.$message.error('修改用户失败')
+        if (!valid) return this.$message.error('修改内容错误，请重新确认')
+        const { data: res } = await this.$http.put('users/' + this.editForm.id, {
+          email: this.editForm.email,
+          mobile: this.editForm.mobile
+        })
+        if (res.meta.status !== 200) return this.$message.error('修改用户失败')
         this.$message.success('修改用户成功')
         // 关闭对话框
         this.editDilogVisible = false
@@ -403,10 +403,10 @@ export default {
       })
     },
     // 修改表单关闭事件
-    editDilogClosed (){
+    editDilogClosed () {
       this.$refs.editFormRef.resetFields()
     },
-    //点击修改按钮弹出对话框
+    // 点击修改按钮弹出对话框
     async showEditDilog(id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) return this.$message.error('查询失败了')
@@ -438,11 +438,10 @@ export default {
     async getUserList() {
       // 获取用户数据
       const { data: res } = await this.$http.get('users', {
-        params: this.queryInfo,
+        params: this.queryInfo
       })
       // console.log(res)
-      if (res.meta.status !== 200)
-        return this.$message.error('获取用户列表失败')
+      if (res.meta.status !== 200) { return this.$message.error('获取用户列表失败') }
       this.userlist = res.data.users
       this.total = res.data.total
     },
@@ -471,10 +470,10 @@ export default {
       console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getUserList()
-    },
+    }
   },
   created() {
     this.getUserList()
-  },
+  }
 }
 </script>
