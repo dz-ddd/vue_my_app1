@@ -43,7 +43,8 @@
                             type="primary"
                             size="mini"
                             icon="el-icon-edit"
-                            @click="showEditDialog"
+
+                            @click="showEditDialog(scope)"
                             ></el-button>  
                         <el-button
                             type="success"
